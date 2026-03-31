@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from sqlalchemy import text
 
+from src.api.routes import stop
 from src.core.database import Base, engine
-from src import models  # registers models
+from src import models 
 
 app = FastAPI()
 
@@ -25,3 +26,8 @@ def test_db():
             "status": "connected",
             "result": [row[0] for row in result]
         }
+    
+
+
+# Including Routes
+app.include_router(stop.router)
