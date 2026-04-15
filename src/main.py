@@ -1,7 +1,9 @@
+
 from fastapi import FastAPI
 from sqlalchemy import text
 
 from src.api.routes import stop
+from src.api.routes import search
 from src.core.database import Base, engine
 from src import models 
 
@@ -31,3 +33,4 @@ def test_db():
 
 # Including Routes
 app.include_router(stop.router)
+app.include_router(search.router)
