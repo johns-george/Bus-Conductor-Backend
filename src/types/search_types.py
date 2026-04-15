@@ -6,7 +6,7 @@ class SearchRouteRequest(BaseModel):
 
 class WeightedStopMap(BaseModel):
     stop_name: str
-    distance: int
+    distance: float
 
 class RouteMap(BaseModel):
     route_id: int

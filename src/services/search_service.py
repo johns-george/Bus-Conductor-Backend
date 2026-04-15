@@ -38,7 +38,7 @@ def get_mapped_routes(
         stops = [
             WeightedStopMap(
                 stop_name=row.stop_name,
-                distance=float(row.distance) if row.distance is not None else 0.0
+                distance=round(float(row.distance), 2) if row.distance else 0.0
             )
             for row in rows
         ]
