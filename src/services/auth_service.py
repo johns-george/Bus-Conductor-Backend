@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from src.models.user import User
 from src.schemas.signup import SignUpRequest
 from src.utility import hash_password, verify_password
+from src.utility.auth_utility import create_access_token, decode_access_token
 
 def signup(signup_request: SignUpRequest,db: Session):
     user_data = signup_request.dict()
@@ -22,7 +23,8 @@ def signup(signup_request: SignUpRequest,db: Session):
 
 def signin(username: str, password: str, db: Session):
     user = db.query(User).filter(User.username == username).first()
-    if user and verify_password(password, user.password):
-        return {"message": "Sign-in successful"}
-    else:
+    if not user or not verify_password(password, user.password):
         return {"message": "Invalid username or password"}
+
+    token = create_access_token({"sub": user.username})
+    return {"access_token": token, "token_type": "bearer"}
