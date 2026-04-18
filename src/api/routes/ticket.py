@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-
+from src.dependencies.auth import get_current_user
 from src.core.database import get_db
 from src.services.ticket_service import get_all_tickets, get_ticket, create_ticket, update_ticket, cancel_ticket
 from src.schemas.ticket_response import TicketResponse
 from src.models.ticket import TicketUpdate
 from typing import List
 
-router = APIRouter(prefix="/tickets")
+router = APIRouter(prefix="/tickets",dependencies=[Depends(get_current_user)])
 
 @router.post("/book-ticket")
 def  book_ticket(
