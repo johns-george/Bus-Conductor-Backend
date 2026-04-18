@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from http.client import HTTPException
-from jose import JWTError, jwt
+from jose import ExpiredSignatureError, JWTError, jwt
 
 SECRET_KEY = ""   # change in prod
 ALGORITHM = "HS256"
@@ -34,5 +34,7 @@ def decode_access_token(token: str):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         return payload
+    except ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
