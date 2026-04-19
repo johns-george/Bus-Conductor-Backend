@@ -10,8 +10,17 @@ class Stop(Base):
     city = Column(String(100))
     district = Column(String(100))
     # Graph relationships
-    outgoing_edges = relationship("Edge", foreign_keys="Edge.from_stop", back_populates="from_stop_rel")
-    incoming_edges = relationship("Edge", foreign_keys="Edge.to_stop", back_populates="to_stop_rel")
+    # -----------------------------
+    outgoing_edges = relationship(
+        "Edge",
+        foreign_keys="Edge.from_stop",
+        back_populates="from_stop_rel"
+    )
+    incoming_edges = relationship(
+        "Edge",
+        foreign_keys="Edge.to_stop",
+        back_populates="to_stop_rel"
+    )
 
     # Route relationships
     route_stops = relationship("RouteStop", back_populates="stop")
