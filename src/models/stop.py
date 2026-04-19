@@ -1,4 +1,4 @@
-from sqlalchemy import Column, BigInteger, String
+from sqlalchemy import Column, BigInteger, String, Index
 from sqlalchemy.orm import relationship
 from src.core.database import Base
 
@@ -7,9 +7,8 @@ class Stop(Base):
 
     id = Column(BigInteger, primary_key=True, index=True)
     name = Column(String(100), nullable=False)
-    address = Column(String(255))
-
-    # -----------------------------
+    city = Column(String(100))
+    district = Column(String(100))
     # Graph relationships
     # -----------------------------
     outgoing_edges = relationship(
@@ -23,29 +22,17 @@ class Stop(Base):
         back_populates="to_stop_rel"
     )
 
-    # -----------------------------
-    # RouteStop relationship
-    # -----------------------------
-    route_stops = relationship(
-        "RouteStop",
-        back_populates="stop",
-        cascade="all, delete-orphan"
+    # Route relationships
+    route_stops = relationship("RouteStop", back_populates="stop")
+    
+    #Indexing for faster search by name
+    __table_args__ = (
+        Index("idx_stop_city", "city"),
+        Index("idx_stop_district", "district"),
+        Index(
+            "idx_stop_name_trgm",
+            "name",
+            postgresql_using="gin",
+            postgresql_ops={"name": "gin_trgm_ops"}
+        ),
     )
-
-    # -----------------------------
-    # Reverse relationships for Route
-    # -----------------------------
-    starting_routes = relationship(
-        "Route",
-        foreign_keys="Route.start_stop_id",
-        back_populates="start_stop"
-    )
-
-    ending_routes = relationship(
-        "Route",
-        foreign_keys="Route.end_stop_id",
-        back_populates="end_stop"
-    )
-
-    def __repr__(self):
-        return f"<Stop(id={self.id}, name='{self.name}')>"
