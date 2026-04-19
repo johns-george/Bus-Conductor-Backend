@@ -9,6 +9,7 @@ class Stop(Base):
     name = Column(String(100), nullable=False)
     city = Column(String(100))
     district = Column(String(100))
+    address = Column(String(255))
     # Graph relationships
     # -----------------------------
     outgoing_edges = relationship(
